@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
    while((nblus = read(fileread, buf, 100)) > 0){
         write(1, buf, nblus);
         if(filecreat < 0){
-            write(1, "hello", 5);
+            write(1, "erro openign file", 5);
             return 3;
         }
         write(filecreat, buf, nblus);
