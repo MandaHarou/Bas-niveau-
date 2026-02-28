@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        write(2, "Usage: ./prog file search_term\n", 31);
+        return 1;
+    }
+
+    int fd = open(argv[1], O_RDONLY);
+    if (fd == -1) {
+        write(2, "Error: Cannot open file\n", 24);
+        return 1;
+    }
+
+    char buf[1024];
+    ssize_t bytes_read;
+    while ((bytes_read = read(fd, buf, sizeof(buf) - 1)) > 0) {
+        buf[bytes_read] = '\0'; // Terminer la chaîne
+        if (strstr(buf, argv[2]) != NULL) { // Recherche de sous-chaîne
+            write(1, "Found: ", 7);
+            write(1, argv[2], strlen(argv[2]));
+            write(1, "\n", 1);
+            close(fd);
+            return 0;
+        }
+    }
+
+    write(1, "Not found\n", 10);
+    close(fd);
+    return 0;
+}   
