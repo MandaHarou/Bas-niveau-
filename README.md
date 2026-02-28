@@ -2,7 +2,7 @@
 ## mitady : 
 ny 'prgogramme' mitady dia 'programme' mitovy amin'ny 'grep',
 izay mamaky 'fichier' ka mitady ny teny izay tadiavina.
-ny fampiasa azy
+Ny fampiasa azy
 
 ```bash
 ./mitady [-f|-d|-r] /dossier/[dossier|fichier] teny_tadiavina
