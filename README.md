@@ -1,7 +1,7 @@
 # FIANARANA PROG SYS
 ## mitady : 
 ny 'prgogramme' mitady dia 'programme' mitovy amin'ny 'grep',
-izay mamaky 'fichier' ka mitady ny teny izay tadiavina ao anatiny 
+izay mamaky 'fichier' ka mitady ny teny izay tadiavina.
 ny fampiasa azy
 
 ```bash
