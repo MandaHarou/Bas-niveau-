@@ -1,6 +1,6 @@
 # FIANARANA PROG SYS
 ## mitady : 
-ny 'prgogramme' mitady dia 'programme' mitovy amin'ny 'grep',
+ny `prgogramme` mitady dia `programme` mitovy amin'ny `grep`,
 izay mamaky 'fichier' ka mitady ny teny izay tadiavina.
 Ny fampiasa azy
 
@@ -11,8 +11,8 @@ Ny fampiasa azy
 -d : "dossier spécifique"
 -r : "hamafa ilay teny tadiavina"
 
-##copy :
-ny 'prgogramme'copy dia mitovy aminy programme cp an linux ihany 
+## copy :
+ny `prgogramme`copy dia mitovy aminy programme cp an linux ihany 
 
 ```bash
 ./copy /source /copy
