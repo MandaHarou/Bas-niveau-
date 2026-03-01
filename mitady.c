@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
                 fd = open(optarg, O_RDWR);
                 if (fd == -1)
                 {
-                    write(1, "Error opening file\n", 19);
+                    write(1, "Error opening file or its dost file\n", 19);
                     return 1;
                 }
 
