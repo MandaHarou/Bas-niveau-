@@ -9,7 +9,7 @@ Ny fampiasa azy
 ```
 -f : "fichier spécifique"
 -d : "dossier spécifique"
--r : "hamafa ilay teny tadiavina"
+-r : "hamafa ilay teny notadiavina"
 
 ## copy :
 Ny `"prgogramme"`copy dia mitovy aminy programme cp an linux ihany 
