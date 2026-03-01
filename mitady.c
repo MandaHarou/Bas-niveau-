@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <sys/stat.h>
 
 void putnbr(int n)
 {
@@ -20,7 +21,7 @@ int main(int argc, char *argv[])
     char buf[1024];
     ssize_t n;
 
-    while ((opt = getopt(argc, argv, "f:d:")) != -1)
+    while ((opt = getopt(argc, argv, "f:d:r:")) != -1)
     {
         if (optind >= argc)
         {
@@ -29,12 +30,13 @@ int main(int argc, char *argv[])
         }
 
         char *word = argv[optind];
+        size_t wordlen = strlen(word);
 
         switch (opt)
         {
-            case 'f':
-
-                fd = open(optarg, O_RDONLY);
+            case 'f': 
+            {
+                fd = open(optarg, O_RDWR);
                 if (fd == -1)
                 {
                     write(1, "Error opening file\n", 19);
@@ -42,13 +44,12 @@ int main(int argc, char *argv[])
                 }
 
                 int count = 0;
+                char filebuf[4096]; 
 
-                while ((n = read(fd, buf, sizeof(buf) - 1)) > 0)
+                while ((n = read(fd, filebuf, sizeof(filebuf) - 1)) > 0)
                 {
-                    buf[n] = '\0';
-
-                    char *ptr = buf;
-
+                    filebuf[n] = '\0';
+                    char *ptr = filebuf;
                     while ((ptr = strstr(ptr, word)) != NULL)
                     {
                         count++;
@@ -56,18 +57,18 @@ int main(int argc, char *argv[])
                     }
                 }
 
-                close(fd);
-
                 write(1, "File: ", 6);
                 write(1, optarg, strlen(optarg));
                 write(1, " -> ", 4);
                 putnbr(count);
                 write(1, " occurrences\n", 13);
 
+                close(fd);
                 break;
+            }
 
             case 'd':
-
+            {
                 DIR *dir = opendir(optarg);
                 if (!dir)
                 {
@@ -82,7 +83,6 @@ int main(int argc, char *argv[])
                     if (entry->d_type == DT_REG)
                     {
                         char path[1024];
-
                         strcpy(path, optarg);
                         strcat(path, "/");
                         strcat(path, entry->d_name);
@@ -92,13 +92,10 @@ int main(int argc, char *argv[])
                             continue;
 
                         int count_d = 0;
-
                         while ((n = read(fd, buf, sizeof(buf) - 1)) > 0)
                         {
                             buf[n] = '\0';
-
                             char *ptr = buf;
-
                             while ((ptr = strstr(ptr, word)) != NULL)
                             {
                                 count_d++;
@@ -120,8 +117,62 @@ int main(int argc, char *argv[])
                 }
 
                 closedir(dir);
-
                 break;
+            }
+            case 'r':
+            {
+                fd = open(optarg, O_RDWR);
+                if (fd == -1)
+                {
+                    write(1, "Error opening file\n", 19);
+                    return 1;
+                }
+
+        
+                char *filedata = malloc(1000000); 
+                if (!filedata)
+                {
+                    write(1, "Memory error\n", 13);
+                    close(fd);
+                    return 1;
+                }
+
+                n = read(fd, filedata, 1000000 - 1);
+                if (n < 0)
+                {
+                    write(1, "Read error\n", 11);
+                    free(filedata);
+                    close(fd);
+                    return 1;
+                }
+
+                filedata[n] = '\0';
+
+        
+                char *src = filedata;
+                char *dst = filedata;
+                while (*src)
+                {
+                    if (strncmp(src, word, wordlen) == 0)
+                        src += wordlen; 
+                    else
+                        *dst++ = *src++;
+                }
+                *dst = '\0';
+
+
+                ftruncate(fd, 0);
+                lseek(fd, 0, SEEK_SET);
+                write(fd, filedata, strlen(filedata));
+
+                write(1, "Word removed from file: ", 24);
+                write(1, optarg, strlen(optarg));
+                write(1, "\n", 1);
+
+                free(filedata);
+                close(fd);
+                break;
+            }
 
             default:
                 write(1, "Invalid option\n", 15);
